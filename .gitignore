@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Training artifacts / generated data (large, regenerable — don't commit
+# DURING DEVELOPMENT). BEFORE FINAL SUBMISSION: you must force-add your
+# final trained checkpoint despite this rule — see submission/README.md,
+# "Before you submit" — otherwise submission/infer_test_set.py has
+# nothing to load when KLA's benchmarking harness runs it.
+outputs/
+*.pt
+*.onnx
+
+# KLA's real training/test data (NoisyLR/GT .npy pairs) and any
+# synthetically-generated pairs -- these are large (thousands of files)
+# and are KLA's distributed dataset, not something to commit into your
+# own repo. Re-download/regenerate rather than versioning it.
+data/
+
+# Environment spec — regenerate fresh before each submission, don't commit a stale one
+submission/environment_freeze.txt
+submission/test_outputs/
+
+# OS / editor cruft
+.DS_Store
+.idea/
+.vscode/
+*.swp

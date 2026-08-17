@@ -1,0 +1,23 @@
+{
+  "num_images": 400,
+  "device": "cpu",
+  "amp_enabled": false,
+  "compile_enabled": false,
+  "tta_enabled": false,
+  "batch_size": 8,
+  "checkpoint": "outputs/checkpoints/best.pt",
+  "timings_seconds": {
+    "script_startup_and_imports": 1.9437,
+    "model_initialization": 0.261,
+    "file_listing": 0.002,
+    "array_reading_and_shape_grouping": 11.2666,
+    "inference_and_write_total": 28.466,
+    "total_wall_clock": 41.9393
+  },
+  "per_image_ms": {
+    "mean": 68.308,
+    "median": 75.37,
+    "min": 40.25,
+    "max": 91.753
+  }
+}

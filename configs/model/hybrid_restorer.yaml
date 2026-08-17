@@ -1,0 +1,12 @@
+# @package model
+name: hybrid_restorer
+in_channels: 1                  # grayscale (SEM/texture/dendrite samples in the KLA deck are single-channel)
+base_width: 32
+enc_blocks: [2, 2, 4, 2]        # NAFNet-lite style stage depths
+dec_blocks: [2, 2, 2, 2]
+bottleneck_attention_heads: 4   # Restormer-style channel attention at bottleneck
+use_defect_branch: false        # KLA's dataset has no defect masks — this head is unused; kept in codebase, disabled by default
+use_confidence_head: true       # self-supervised (Gaussian NLL vs. clean image) — does not require masks, safe to keep on
+iqa_conditioning: true          # FiLM-modulate features using speckle/blur strength estimate
+sr_scale: 2                     # FIXED per KLA spec (512->256 or 256->128, always 2x)
+dropout: 0.05                   # kept >0 to allow optional MC-Dropout uncertainty at inference

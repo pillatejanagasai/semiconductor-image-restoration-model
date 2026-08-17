@@ -1,0 +1,47 @@
+# @package train
+epochs: 200
+optimizer:
+  name: adamw
+  lr: 2.0e-4
+  weight_decay: 1.0e-4
+  betas: [0.9, 0.999]
+scheduler:
+  name: cosine_annealing_warm_restarts
+  T_0: 25
+  eta_min: 1.0e-6
+amp: true
+grad_clip_norm: 1.0
+ema: true
+ema_decay: 0.999
+
+# Weighted to directly target KLA's three official evaluation metrics
+# (docs/evaluation_metrics.md): charbonnier drives PSNR, ms_ssim drives
+# SSIM, lpips drives LPIPS — directly answering the KLA deck's tip
+# (slide 18): "combine perceptual loss (LPIPS) with pixel-level metrics
+# (SSIM, pSNR)". defect_preservation/segmentation are 0 by default since
+# KLA's dataset has no defect masks (see docs/kla_compliance_checklist.md).
+loss_weights:
+  charbonnier: 1.0
+  ms_ssim: 0.20
+  lpips: 0.10          # set to 0 to disable (also auto-disables if `lpips` package isn't installed)
+  edge: 0.05
+  gradient: 0.05
+  frequency: 0.05
+  defect_preservation: 0.0
+  segmentation: 0.0
+  uncertainty: 0.05     # confidence head is self-supervised, no masks needed
+
+checkpoint:
+  dir: outputs/checkpoints
+  save_every_epochs: 1
+  keep_last_k: 5
+  metric_for_best: ssim   # one of KLA's official metrics; see docs/evaluation_metrics.md for why SSIM over PSNR
+
+logging:
+  tensorboard_dir: outputs/tensorboard
+  log_every_steps: 50
+
+early_stopping:
+  enable: true
+  patience_epochs: 30
+  monitor: ssim

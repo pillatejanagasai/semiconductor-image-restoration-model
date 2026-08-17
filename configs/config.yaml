@@ -1,0 +1,16 @@
+defaults:
+  - data: kla_data
+  - model: hybrid_restorer
+  - train: default
+  - _self_
+
+seed: 42
+deterministic: true
+output_dir: outputs
+experiment_name: baseline_hybrid_restorer
+
+hydra:
+  run:
+    dir: ${output_dir}/${experiment_name}
+  job:
+    chdir: false

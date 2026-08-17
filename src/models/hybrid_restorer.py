@@ -169,7 +169,7 @@ class HybridRestorer(nn.Module):
             self.residual_gate_scale = nn.Parameter(torch.tensor(1.0))
 
         if use_confidence_head:
-            self.log_var_head = nn.Conv2d(w, in_channels, kernel_size=1)
+            self.log_var_head = nn.Conv2d(w, in_channels * (sr_scale ** 2), kernel_size=1)
 
     def forward(self, x: torch.Tensor, cond: torch.Tensor | None = None) -> dict[str, torch.Tensor]:
         if self.iqa_conditioning:
@@ -214,7 +214,11 @@ class HybridRestorer(nn.Module):
                 defect_prob = torch.sigmoid(defect_logits)
                 restored = restored + self.residual_gate_scale * defect_prob * high_freq_residual
 
-        log_var = self.log_var_head(decoder_features) if self.use_confidence_head else None
+        log_var = None
+        if self.use_confidence_head:
+            log_var = self.log_var_head(decoder_features)
+            if self.sr_scale > 1:
+                log_var = self.pixel_shuffle(log_var)
 
         return {
             "restored": restored,
